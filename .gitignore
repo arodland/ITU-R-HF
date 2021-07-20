@@ -358,3 +358,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+*.o
+*.d
+/ITURHFProp/Linux/ITURHFProp
