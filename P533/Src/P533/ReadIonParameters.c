@@ -99,13 +99,10 @@ int ReadIonParametersBin(int month, float ***foF2, float ***M3kF2, char DataFile
 	};
 
 	// Read in foF2
-    for(j = 0; j < lng; j++) { // Longitude
+    for(i = 0; i < hrs; i++) { // Latitude
         for(k = 0; k < lat; k++) { // Latitude
-            // Read 24 hours of data from the Dambolt/Seussman ionospheric atlas file
-            for(i = 0; i < hrs; i++) { // Latitude
-                foF2[i][j][k] = readBuffer[ (j * (lat * hrs)) +
-                                                (k * (hrs)) +
-                                                    i];
+            for(j = 0; j < lng; j++) { // Longitude
+                foF2[i][j][k] = readBuffer[ i * lat * lng + k * lng + j ];
 			};
 		};	
 	};
@@ -120,13 +117,10 @@ int ReadIonParametersBin(int month, float ***foF2, float ***M3kF2, char DataFile
 	fread(readBuffer,sizeof(float),numfoF2,fp);
 
 	// Read in M3kF2
-    for(j = 0; j < lng; j++) { // Longitude
+    for(i = 0; i < hrs; i++) { // Latitude
         for(k = 0; k < lat; k++) { // Latitude
-            // Read 24 hours of data from the Dambolt/Seussman ionospheric atlas file.
-            for(i = 0; i < hrs; i++) { // Latitude
-                M3kF2[i][j][k] = readBuffer[ (j * (lat * hrs)) +
-                                                (k * (hrs)) +
-                                                    i];
+            for(j = 0; j < lng; j++) { // Longitude
+                M3kF2[i][j][k] = readBuffer[ i * lat * lng + k * lng + j ];
 			};
 		};	
 	};
