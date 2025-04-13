@@ -126,16 +126,16 @@ void IonosphericParameters(struct ControlPt *here, float ****foF2, float ****M3k
 	int		lng, lat;	// gridmap maxima
 
 	// For the gridpoint maps at an increment of 1.5 degrees in lat and long
-	int zerolat = 60;	// The max latitude is 121 
-	int zerolng = 120;	// The max longitude is 241
-	double inc;			// Increment for the gridpoint maps (1.5 * pi) / 180 = 0.0261799388
+	int zerolat = 90;	// The max latitude is 181 
+	int zerolng = 180;	// The max longitude is 361
+	double inc;			// Increment for the gridpoint maps pi / 180 = 0.0174532925
 	double fracj, frack;// Fractional "column" j and fractional "row" k
 
-	// This routine is dependent on the 1.5 degree increment
-	inc = 1.5*D2R;
+	// This routine is dependent on the 1 degree increment
+	inc = 1*D2R;
 
-	lng = 241;	// 241 Longitudes at 1.5 degree increments
-	lat = 121;	// 121 lngitudes at 1.5 degree increments
+	lng = 361;	// 361 Longitudes at 1 degree increments
+	lat = 181;	// 181 lngitudes at 1 degree increments
 	 
 	/*
 	 * Find the neighborhood around the point of interest

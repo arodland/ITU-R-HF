@@ -79,8 +79,8 @@ DLLEXPORT int AllocatePathMemory(struct PathData *path) {
 	 * Allocate the ionospheric parameter arrays that will be used by the P533 engine.
 	 */
 	hrs = 24;	// 24 hours
-	lng = 241;	// 241 longitudes at 1.5 degree increments
-	lat = 121;	// 121 latitudes at 1.5 degree increments
+	lng = 361;	// 361 longitudes at 1 degree increments
+	lat = 181;	// 181 latitudes at 1 degree increments
 	ssn = 2;	// 2 SSN (12-month smoothed sun spot numbers) high and low
 
 	/* 
@@ -233,8 +233,8 @@ DLLEXPORT int FreePathMemory(struct PathData *path) {
 	 * Free the ionospheric parameter arrays.
 	 */
 	hrs = 24;	// 24 hours
-	lng = 241;	// 241 longitudes at 1.5 degree increments
-	lat = 121;	// 121 latitudes at 1.5 degree increments
+	lng = 361;	// 361 longitudes at 1 degree increments
+	lat = 181;	// 181 latitudes at 1 degree increments
 	ssn = 2;	// 2 SSN (12-month smoothed sun spot numbers) high and low
 
 	for (i=0; i<hrs; i++) {

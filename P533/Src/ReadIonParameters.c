@@ -63,8 +63,8 @@ int ReadIonParametersTxt(struct PathData *path, char DataFilePath[256], int sile
 	// The dimensions of the array are fixed by Suessman's file generating program "iongrid"
 	// Eventually it would be nice if these were not fixed values so that other resolutions could be used. 
 	hrs = 24;	// 24 hours
-	lng = 241;	// 241 longitudes at 1.5-degree increments
-	lat = 121;	// 121 latitudes at 1.5-degree increments
+	lng = 361;	// 361 longitudes at 1-degree increments
+	lat = 181;	// 181 latitudes at 1-degree increments
 	ssn = 2;	// 2 SSN (12-month smoothed sun spot numbers) high and low
 	
 	// This may require error handling at some point.
@@ -196,8 +196,8 @@ int ReadIonParametersBin(int month, float ****foF2, float ****M3kF2, char DataFi
 	// The dimensions of the array are fixed by Suessman's file generating program "iongrid".
 	// Eventually it would be nice if these were not fixed values so that other resolutions could be used. 
 	hrs = 24;	// 24 hours
-	lng = 241;	// 241 longitudes at 1.5-degree increments
-	lat = 121;	// 121 latitudes at 1.5-degree increments
+	lng = 361;	// 361 longitudes at 1-degree increments
+	lat = 181;	// 181 latitudes at 1-degree increments
 	ssn = 2;	// 2 SSN (12-month smoothed sun spot numbers) high and low
 	numfoF2 = hrs * lng * lat * ssn;
 	// This may require error handling at some point.
