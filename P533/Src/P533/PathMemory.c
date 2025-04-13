@@ -65,8 +65,8 @@ DLLEXPORT int AllocatePathMemory(struct PathData *path) {
 	 
 	 */
 
-	float ****foF2;			// foF2 ionospheric map
-	float ****M3kF2;		// M(3000)F2 ionospheric map
+	float ***foF2;			// foF2 ionospheric map
+	float ***M3kF2;		// M(3000)F2 ionospheric map
 	double *****foF2var;	// foF2 statistics
 
 	int retval;
@@ -81,33 +81,26 @@ DLLEXPORT int AllocatePathMemory(struct PathData *path) {
 	hrs = 24;	// 24 hours
 	lng = 361;	// 361 longitudes at 1 degree increments
 	lat = 181;	// 181 latitudes at 1 degree increments
-	ssn = 2;	// 2 SSN (12-month smoothed sun spot numbers) high and low
 
 	/* 
 	 * Create the foF2 array so you can pass it into the core P.533 process.
 	 */
-	foF2 = (float****) malloc(hrs * sizeof(float***));
+	foF2 = (float***) malloc(hrs * sizeof(float**));
 	for (i=0; i<hrs; i++) {
-		foF2[i] = (float***) malloc(lng * sizeof(float**));
+		foF2[i] = (float**) malloc(lng * sizeof(float*));
 		for (j=0; j<lng; j++) {
-			foF2[i][j] = (float**) malloc(lat * sizeof(float*));
-			for (k=0; k<lat; k++) {
-				foF2[i][j][k] = (float*) malloc(ssn * sizeof(float));
-			};
+			foF2[i][j] = (float*) malloc(lat * sizeof(float));
 		};
 	};
 
 	/* 
 	 * Create the M(3000)F2 array so you can pass it into the core P.533 process.
 	 */
-	M3kF2 = (float****) malloc(hrs * sizeof(float***));
+	M3kF2 = (float***) malloc(hrs * sizeof(float**));
 	for (i=0; i<hrs; i++) {
-		M3kF2[i] = (float***) malloc(lng * sizeof(float**));
+		M3kF2[i] = (float**) malloc(lng * sizeof(float*));
 		for (j=0; j<lng; j++) {
-			M3kF2[i][j] = (float**) malloc(lat * sizeof(float*));
-			for (k=0; k<lat; k++) {
-				M3kF2[i][j][k] = (float*) malloc(ssn * sizeof(float));
-			};
+			M3kF2[i][j] = (float*) malloc(lat * sizeof(float));
 		};
 	};	
 
@@ -235,9 +228,6 @@ DLLEXPORT int FreePathMemory(struct PathData *path) {
 
 	for (i=0; i<hrs; i++) {
 		for (j=0; j<lng; j++) {
-			for (k=0; k<lat; k++) {
-				free(path->foF2[i][j][k]);
-				};
 			free(path->foF2[i][j]);
 			};
 		free(path->foF2[i]);
@@ -246,9 +236,6 @@ DLLEXPORT int FreePathMemory(struct PathData *path) {
 
 	for (i=0; i<hrs; i++) {
 		for (j=0; j<lng; j++) {
-			for (k=0; k<lat; k++) {
-				free(path->M3kF2[i][j][k]);
-			};
 			free(path->M3kF2[i][j]);
 		};
 		free(path->M3kF2[i]);

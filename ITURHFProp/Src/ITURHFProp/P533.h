@@ -344,8 +344,8 @@ struct PathData {
 	// current month. If the month changes foF2 and M3kF2 will have to be reloaded, while the pointer
 	// foF2var does not since it is for the entire year
 	// Pointers to array extracted from the coefficients in ~/IonMap directory
-	float ****foF2;			// foF2
-	float ****M3kF2;		// M(3000)F2
+	float ***foF2;			// foF2
+	float ***M3kF2;		// M(3000)F2
 	// Pointer to array extracted from the file "P1239-2 Decile Factors.txt"
 	double *****foF2var;	// foF2 Variablity from ITU-R P.1239-2 TABLE 2 and TABLE 3
 
@@ -551,7 +551,7 @@ DLLEXPORT int ReadType11(struct Antenna *Ant, FILE *fp, int silent);
 DLLEXPORT int ReadType13(struct Antenna *Ant, FILE *fp, double bearing, int silent);
 DLLEXPORT int ReadType14(struct Antenna *Ant, FILE *fp, int silent);
 DLLEXPORT void IsotropicPattern(struct Antenna *Ant, double G, int silent);
-DLLEXPORT int ReadIonParametersBin(int month, float ****foF2, float ****M3kF2, char DataFilePath[256], int silent);
+DLLEXPORT int ReadIonParametersBin(int month, float ***foF2, float ***M3kF2, char DataFilePath[256], int silent);
 DLLEXPORT int ReadIonParametersTxt(struct PathData *path, char DataFilePath[256], int silent) ;
 DLLEXPORT int ReadP1239(struct PathData *path, const char * DataFilePath);
 DLLEXPORT void SetAntennaPatternVal(struct PathData * path, int TXorRX, int azimuth, int elevation, double value);

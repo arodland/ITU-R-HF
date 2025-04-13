@@ -84,7 +84,7 @@ void CalculateCPParameters( struct PathData *path, struct ControlPt *here) {
 	return;
 };
 
-void IonosphericParameters(struct ControlPt *here, float ****foF2, float ****M3kF2, int hour, int SSN){
+void IonosphericParameters(struct ControlPt *here, float ***foF2, float ***M3kF2, int hour, int SSN){
 
 	/*
 	 
@@ -92,8 +92,8 @@ void IonosphericParameters(struct ControlPt *here, float ****foF2, float ****M3k
 	 
 	  	INPUTS
 	 		struct ControlPt *here,
-	  		double ****foF2
-	 		double ****M3kF2
+	  		double ***foF2
+	 		double ***M3kF2
 	 		int hour
 	 		int SSN
 	 
@@ -111,7 +111,7 @@ void IonosphericParameters(struct ControlPt *here, float ****foF2, float ****M3k
 	 	
 	struct Neighbor {
 		struct Location L; // the physical location of the point
-		double foF2[2], M3kF2[2]; // the values for the ionospheric parameters at the point
+		double foF2, M3kF2; // the values for the ionospheric parameters at the point
 		int j, k; // the j (lng) and k (lat) indexes into the gridpoint map. 
 	} UL, UR, LR, LL; // UL = upper left, UR = upper right, LR = lower right and LL = lower left
 	
@@ -314,41 +314,25 @@ void IonosphericParameters(struct ControlPt *here, float ****foF2, float ****M3k
 	 */
 	n = hour;
 
-	for(m=0; m<2; m++) { // SSN
-		// Upper Left
-		UL.foF2[m] = foF2[n][UL.j][UL.k][m];
-		UL.M3kF2[m] = M3kF2[n][UL.j][UL.k][m];
-		// Upper Right
-		UR.foF2[m] = foF2[n][UR.j][UR.k][m];
-		UR.M3kF2[m] = M3kF2[n][UR.j][UR.k][m];
-		// Lower Left
-		LL.foF2[m] = foF2[n][LL.j][LL.k][m];
-		LL.M3kF2[m] = M3kF2[n][LL.j][LL.k][m];
-		// Lower Right
-		LR.foF2[m] = foF2[n][LR.j][LR.k][m];
-		LR.M3kF2[m] = M3kF2[n][LR.j][LR.k][m];
-	};
+    // Upper Left
+    UL.foF2 = foF2[n][UL.j][UL.k];
+    UL.M3kF2 = M3kF2[n][UL.j][UL.k];
+    // Upper Right
+    UR.foF2 = foF2[n][UR.j][UR.k];
+    UR.M3kF2 = M3kF2[n][UR.j][UR.k];
+    // Lower Left
+    LL.foF2 = foF2[n][LL.j][LL.k];
+    LL.M3kF2 = M3kF2[n][LL.j][LL.k];
+    // Lower Right
+    LR.foF2 = foF2[n][LR.j][LR.k];
+    LR.M3kF2 = M3kF2[n][LR.j][LR.k];
 			
 	// Now you are ready to interpolate the value at the point of interest
 	// determine the fractional "column" j and fractional "row" k for the bilinear interpolation calculation
 	frack =  fabs(here->L.lat/inc) - (int)fabs(here->L.lat/inc); // Fractional row distance
 	fracj =  fabs(here->L.lng/inc) - (int)fabs(here->L.lng/inc); // Fractional column distance
-	for(m=0; m<2; m++) {
-		ned.foF2[m] = BilinearInterpolation(LL.foF2[m], LR.foF2[m], UL.foF2[m], UR.foF2[m], frack, fracj);
-		ned.M3kF2[m] = BilinearInterpolation(LL.M3kF2[m], LR.M3kF2[m], UL.M3kF2[m], UR.M3kF2[m], frack, fracj);
-	};
-
-	// End of calculation for foF2 and M3kF2
-
-	/*
-	 * Now interpolate by the SSN. Note the SSN maximum has been restricted to a maximm of 160 ITU-R P.533-12.
-	 * "For most purposes it is adequate to assume a linear relationship with R12 for both foF2 and M(3000)F2." 
-	 * ITU-R P.1239-2 (10-2009)
-	 * Note the index on foF2 and M3kF2 in the neighbor structure is for the SSN = 0 (index = 0) and SSN = 100 (index = 1)
-	 */
-	SSN = min(SSN, MAXSSN);
-	here->foF2 = (ned.foF2[1]*SSN + ned.foF2[0]*(100.0 - SSN))/100.0;
-	here->M3kF2 = (ned.M3kF2[1]*SSN + ned.M3kF2[0]*(100.0 - SSN))/100.0;
+    here->foF2 = BilinearInterpolation(LL.foF2, LR.foF2, UL.foF2, UR.foF2, frack, fracj);
+    here->M3kF2 = BilinearInterpolation(LL.M3kF2, LR.M3kF2, UL.M3kF2, UR.M3kF2, frack, fracj);
 
 	// End of calculation for foF2 and M3kF2
 
