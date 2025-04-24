@@ -353,6 +353,82 @@ int ReadType14(struct Antenna *Ant, FILE *fp, int silent) {
 	return RTN_READANTENNAPATTERNSOK;
 };
 
+int ReadMBPAnt(struct Antenna *Ant, FILE *fp, double bearing, int silent) {
+  char buf[8];
+  char antname[256];
+
+  int i, j, k;           // Loop counters
+  char flags;            // Flags for active band
+  int freqn, azin, elen; // Number of frequencies, elevations, and azimuths
+  int jazi;              // Offset azimuth counter
+  int iMBOS;             // Integer offset of the main beam azimuth
+                         //
+  azin = 360;
+  elen = 91;
+
+  if (fp == NULL) {
+    return RTN_ERRCANTOPENANTFILE;
+  }
+
+  // The first line is the name of the antenna.
+  // fgets will return a string that has a trailing "\n" which needs to be
+  // stripped off
+  if (fgets(antname, sizeof(antname), fp) != NULL) {
+    size_t len = strlen(antname);
+    if (len > 0 && antname[len - 1] == '\n') {
+      antname[--len] = '\0';
+    };
+  };
+
+  // Number of frequencies
+  fread(&buf, sizeof(char), 1, fp);
+  freqn = (int) *((unsigned char *)buf);
+
+  AllocateAntennaMemory(Ant, freqn, azin, elen);
+  strcpy(Ant->Name, antname);
+
+  // User feedback
+  if (silent != TRUE) {
+    printf("ReadMBPAnt: Reading antenna %.35s\n", Ant->Name);
+  };
+
+  // Determine the azimuth direction that the antenna is pointing to find the
+  // index offset. Ideally the antenna pattern could be rotated to any position
+  // and then every gain value in the pattern would be interpolated. In this
+  // implementation the pattern will be rotated to the nearest integer azimuth
+  // degree. This approximate method was chosen because of the error of having
+  // the pattern off by maximally +- 1/2 degree is considered to be minimal.
+  iMBOS = (int)(bearing * R2D);
+
+  for (i = 0; i < freqn; i++) {
+    // Each frequency block begins with a flags byte indicating whether it's
+    // A full 360-degree pattern or only an elevation pattern (useful for
+    // vertical antennas, or for any case where you're not using manual
+    // bearing), followed by its frequency, followed by the pattern data.
+    fread(&flags, sizeof(char), 1, fp);
+    fread(&buf, sizeof(float), 1, fp);
+    Ant->freqs[i] = (double) *((float *)buf);
+
+    if (flags & 1) { // Full 360-degree pattern
+        for (j = 0; j < azin; j++) {
+            jazi = (iMBOS + j) % 360;
+            for (k = 0 ; k < elen; k++) {
+                fread(&buf, sizeof(float), 1, fp);
+                Ant->pattern[i][jazi][k] = (double) *((float *)buf);
+            }
+        }
+    } else { // Elevation only
+        for (k = 0 ; k < elen ; k++) {
+            fread(&buf, sizeof(float), 1, fp);
+            Ant->pattern[i][0][k] = (double) *((float *)buf);
+        }
+        for (j=1; j < azin; j++) {
+            memcpy(Ant->pattern[i][j], Ant->pattern[i][0], elen * sizeof(double));
+        }
+    }
+  }
+  return RTN_READANTENNAPATTERNSOK;
+}
 
 void IsotropicPattern(struct Antenna *Ant, double G, int silent) {
 

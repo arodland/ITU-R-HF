@@ -13,6 +13,7 @@
 	typedef int(__cdecl* iReadType11Func)(struct Antenna* Ant, FILE* DataFilePath, int silent);
 	typedef int(__cdecl* iReadType13Func)(struct Antenna* Ant, FILE* DataFilePath, double bearing, int silent);
 	typedef int(__cdecl* iReadType14Func)(struct Antenna* Ant, FILE* DataFilePath, int silent);
+	typedef int(__cdecl* iReadMBPAntFunc)(struct Antenna* Ant, FILE* DataFilePath, double bearing, int silent);
 	typedef void(__cdecl * vIsotropicPatternFunc)(struct Antenna *Ant, double G, int silent);
 	typedef int(__cdecl * iReadFamDudFunc)(struct PathData *path, char * DataFilePath);
 	typedef int(__cdecl * iReadIonParametersBinFunc)(int month, float ***foF2, float ***M3kF2, char DataFilePath[256], int silent);
@@ -45,6 +46,7 @@
 	iReadType11Func dllReadType11Func;
 	iReadType13Func dllReadType13Func;
 	iReadType14Func dllReadType14Func;
+	iReadMBPAntFunc dllReadMBPAntFunc;
 	vIsotropicPatternFunc dllIsotropicPatternFunc;
 	iReadIonParametersBinFunc dllReadIonParametersBinFunc;
 	iReadIonParametersTxtFunc dllReadIonParametersTxtFunc;
@@ -62,6 +64,7 @@
 	int  (*dllReadType11Func)(struct Antenna *Ant, FILE *fp, int silent);
 	int  (*dllReadType13Func)(struct Antenna *Ant, FILE *fp, double bearing, int silent);
 	int  (*dllReadType14Func)(struct Antenna *Ant, FILE *fp, int silent);
+	int  (*dllReadMBPAntFunc)(struct Antenna *Ant, FILE *fp, double bearing, int silent);
 	void (*dllIsotropicPatternFunc)(struct Antenna *Ant, double G, int silent);
 	int  (*dllReadIonParametersTxtFunc)(struct PathData *path, char DataFilePath[256], int silent);
         int  (*dllReadIonParametersBinFunc)(int month, float ****oF2, float ***M3kF2, char DataFilePath[256], int silent);
