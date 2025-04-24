@@ -550,6 +550,7 @@ DLLEXPORT int InputDump(struct PathData *path);
 DLLEXPORT int ReadType11(struct Antenna *Ant, FILE *fp, int silent);
 DLLEXPORT int ReadType13(struct Antenna *Ant, FILE *fp, double bearing, int silent);
 DLLEXPORT int ReadType14(struct Antenna *Ant, FILE *fp, int silent);
+DLLEXPORT int ReadMBPAnt(struct Antenna *Ant, FILE *fp, double bearing, int silent);
 DLLEXPORT void IsotropicPattern(struct Antenna *Ant, double G, int silent);
 DLLEXPORT int ReadIonParametersBin(int month, float ***foF2, float ***M3kF2, char DataFilePath[256], int silent);
 DLLEXPORT int ReadIonParametersTxt(struct PathData *path, char DataFilePath[256], int silent) ;

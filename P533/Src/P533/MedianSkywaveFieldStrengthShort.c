@@ -1171,7 +1171,7 @@ double AntennaGain(struct PathData path, struct Antenna Ant, double delta, int d
       }
     }
   }
-  
+
 	// The elevations and azimuths have to be in degrees because the antenna pattern is indexed in degrees.
 
 	// delta is in radians convert to degrees

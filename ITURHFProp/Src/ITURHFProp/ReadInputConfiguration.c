@@ -603,6 +603,7 @@ int ReadAntennaPatterns(struct PathData *path, struct ITURHFProp ITURHFP) {
 	int retval;
     int antType;
     int lineCtr;
+    int fnlen;
 
     FILE *fp;
 	
@@ -638,12 +639,18 @@ int ReadAntennaPatterns(struct PathData *path, struct ITURHFProp ITURHFP) {
 		    return RTN_ERRCANTOPENRXANTFILE;
 	    };
 
-	    for (lineCtr = 0 ; lineCtr<4 ; ++lineCtr) {
-		    fgets(line, sizeof(line), fp);		// Scroll to line 3, Antenna type
-	    }
+        fnlen = strlen(ITURHFP.RXAntFilePath);
+        if(fnlen >= 4 && strcmp(ITURHFP.RXAntFilePath + fnlen - 4, ".mbp") == 0) {
+            antType = 42;
+        } else {
+            // Try it as a VOACAP type file
+            for (lineCtr = 0 ; lineCtr<4 ; ++lineCtr) {
+                fgets(line, sizeof(line), fp);		// Scroll to line 3, Antenna type
+            }
 
-	    sscanf(line, " %d %s\n", &antType, instr);
-        rewind(fp);
+            sscanf(line, " %d %s\n", &antType, instr);
+            rewind(fp);
+        }
 
 	    if(antType == 11) {
 		    retval = dllReadType11Func(&path->A_rx, fp, ITURHFP.silent);
@@ -659,6 +666,12 @@ int ReadAntennaPatterns(struct PathData *path, struct ITURHFProp ITURHFP) {
 		    };
 	    } else if (antType == 14) {
 		    retval = dllReadType14Func(&path->A_rx, fp, ITURHFP.silent);
+            fclose(fp);
+		    if (retval != RTN_READANTENNAPATTERNSOK) {
+				    return retval;
+		    };
+        } else if (antType == 42) {
+            retval = dllReadMBPAntFunc(&path->A_rx, fp, ITURHFP.RXBearing, ITURHFP.silent);
             fclose(fp);
 		    if (retval != RTN_READANTENNAPATTERNSOK) {
 				    return retval;
@@ -684,12 +697,18 @@ int ReadAntennaPatterns(struct PathData *path, struct ITURHFProp ITURHFP) {
 			};
 		    return RTN_ERRCANTOPENTXANTFILE;
 	    };
-	    for (lineCtr = 0 ; lineCtr<4 ; ++lineCtr) {
-		    fgets(line, sizeof(line), fp);		// Antenna type
-	    }
-	    sscanf(line, " %d %s\n", &antType, instr);
+        fnlen = strlen(ITURHFP.TXAntFilePath);
+        if(fnlen >= 4 && strcmp(ITURHFP.TXAntFilePath + fnlen - 4, ".mbp") == 0) {
+            antType = 42;
+        } else {
+            // Try it as a VOACAP type file
+            for (lineCtr = 0 ; lineCtr<4 ; ++lineCtr) {
+                fgets(line, sizeof(line), fp);		// Antenna type
+            }
+            sscanf(line, " %d %s\n", &antType, instr);
 
-        rewind(fp);
+            rewind(fp);
+        }
 
 	    if(antType == 11) {
 		    retval = dllReadType11Func(&path->A_tx, fp, ITURHFP.silent);
@@ -705,6 +724,12 @@ int ReadAntennaPatterns(struct PathData *path, struct ITURHFProp ITURHFP) {
             }
 		} else if (antType == 14) {
 		    retval = dllReadType14Func(&path->A_tx, fp, ITURHFP.silent);
+            fclose(fp);
+		    if (retval != RTN_READANTENNAPATTERNSOK) {
+				    return retval;
+		    };
+        } else if (antType == 42) {
+            retval = dllReadMBPAntFunc(&path->A_tx, fp, ITURHFP.TXBearing, ITURHFP.silent);
             fclose(fp);
 		    if (retval != RTN_READANTENNAPATTERNSOK) {
 				    return retval;

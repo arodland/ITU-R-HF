@@ -126,6 +126,7 @@ int main(int argc, char *argv[]) {
 	dllReadType11Func = (iReadType11Func)GetProcAddress((HMODULE)hLib,"ReadType11");
 	dllReadType13Func = (iReadType13Func)GetProcAddress((HMODULE)hLib,"ReadType13");
 	dllReadType14Func = (iReadType14Func)GetProcAddress((HMODULE)hLib,"ReadType14");
+	dllReadType13Func = (iReadMBPAntFunc)GetProcAddress((HMODULE)hLib,"ReadMBPAnt");
 	dllIsotropicPatternFunc = (vIsotropicPatternFunc)GetProcAddress((HMODULE)hLib,"IsotropicPattern");
 //	dllReadFamDudFunc = (ReadFamDudFunc)GetProcAddress((HMODULE)hLib,"ReadFamDud");
 	dllReadIonParametersBinFunc = (iReadIonParametersBinFunc)GetProcAddress((HMODULE)hLib,"ReadIonParametersBin");
@@ -149,6 +150,7 @@ int main(int argc, char *argv[]) {
 	dllReadType11Func = dlsym(hLib,"ReadType11");
 	dllReadType13Func = dlsym(hLib,"ReadType13");
 	dllReadType14Func = dlsym(hLib,"ReadType14");
+	dllReadMBPAntFunc = dlsym(hLib,"ReadMBPAnt");
 	dllIsotropicPatternFunc = dlsym(hLib,"IsotropicPattern");
 	dllReadIonParametersBinFunc = dlsym(hLib,"ReadIonParametersBin");
 	dllReadIonParametersTxtFunc = dlsym(hLib,"ReadIonParametersTxt");
